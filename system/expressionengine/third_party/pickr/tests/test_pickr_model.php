@@ -318,6 +318,42 @@ class Test_pickr_model extends Testee_unit_test_case {
 		$model->disable_extension();
 	}
 	
+	
+	public function test_update_extension__update()
+	{
+		$model	= $this->_model;
+		$db		= $this->_ee->db;
+		
+		$actual_version		= '1.0.0';
+		$installed_version	= '0.9.0';
+		
+		$data = array('version' => $actual_version);
+		$where = array('class' => $model->get_extension_class());
+		
+		$db->expectOnce('update', array('extensions', $data, $where));
+		
+		// Run the test.
+		$model->update_extension($installed_version, $actual_version);
+	}
+	
+	
+	public function test_update_extension__no_update()
+	{
+		$model	= $this->_model;
+		$db		= $this->_ee->db;
+		
+		$actual_version		= '1.0.0';
+		$installed_version	= '';
+		
+		$db->expectNever('update');
+		
+		// Run the tests.
+		$this->assertIdentical($model->update_extension($installed_version, $actual_version), FALSE);
+		
+		$installed_version = $actual_version;
+		$this->assertIdentical($model->update_extension($installed_version, $actual_version), FALSE);
+	}
+	
 }
 
 /* End of file 		: test_pickr_model.php */

@@ -327,6 +327,30 @@ class Pickr_model extends CI_Model {
 	}
 	
 	
+	/**
+	 * Updates the extension.
+	 *
+	 * @access	public
+	 * @param	string		$current_version		The currently installed version.
+	 * @param	string		$update_version			The version we're upgrading to.
+	 * @return	bool|void
+	 */
+	public function update_extension($current_version = '', $update_version = '')
+	{
+		if ($current_version == ''
+			OR version_compare($current_version, $update_version, '>='))
+		{
+			return FALSE;
+		}
+		
+		$this->_ee->db->update(
+			'extensions',
+			array('version' => $update_version),
+			array('class' => $this->get_extension_class())
+		);
+	}
+	
+	
 	
 	/* --------------------------------------------------------------
 	 * PRIVATE METHODS
