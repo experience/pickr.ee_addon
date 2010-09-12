@@ -30,9 +30,6 @@ class Test_pickr_model extends Testee_unit_test_case {
 		
 		// Mock the API connector object.
 		Mock::generate('Mock_pickr_flickr', 'Pickr_flickr');
-		
-		// Set the model API connector.
-		$this->_ee->pickr_model->set_api_connector(new Pickr_flickr());
 	}
 	
 	
@@ -132,6 +129,39 @@ class Test_pickr_model extends Testee_unit_test_case {
 	public function test_save_member_flickr_photo__invalid_member_id()
 	{
 		$this->assertIdentical($this->_ee->pickr_model->save_member_flickr_photo('NULL', ''), FALSE);
+	}
+	
+	
+	public function test_get_flickr_user_from_username__pass()
+	{
+		$model	= $this->_ee->pickr_model;
+		$conn	= new Pickr_flickr();			// Mock object.
+		
+		$flickr_username	= 'wibble';
+		$flickr_user		= array();
+		
+		$conn->expectOnce('people_find_by_username', array($flickr_username));
+		$conn->setReturnReference('people_find_by_username', $flickr_user, array($flickr_username));
+		
+		// Set model API connector.
+		$model->set_api_connector(&$conn);
+		
+		// Run the tests.
+		$this->assertIdentical($model->get_flickr_user_from_username($flickr_username), $flickr_user);
+	}
+	
+	
+	public function test_get_flickr_user_from_username__no_credentials()
+	{
+		$model	= $this->_ee->pickr_model;
+		$conn	= new Pickr_flickr();
+		
+		$conn->throwOn('people_find_by_username', new Exception('API credentials not set.'));		
+		$model->set_api_connector(&$conn);
+		
+		// Run the test.
+		$this->expectException(new Exception('API credentials not set.'));
+		$model->get_flickr_user_from_username('NULL');
 	}
 	
 }

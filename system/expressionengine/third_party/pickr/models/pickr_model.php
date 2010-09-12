@@ -83,6 +83,19 @@ class Pickr_model extends CI_Model {
 	
 	
 	/**
+	 * Returns a Flickr user, given the username.
+	 *
+	 * @access	public
+	 * @param	string	$username	The Flickr username.
+	 * @return	array
+	 */
+	public function get_flickr_user_from_username($username)
+	{
+		return $this->_api_connector->people_find_by_username($username);
+	}
+	
+	
+	/**
 	 * Returns the Flickr username member field ID. Hard-coded at present,
 	 * but could be moved to a config file or settings screen in the future.
 	 *
