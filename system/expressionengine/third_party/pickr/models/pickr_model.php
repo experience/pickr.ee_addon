@@ -24,6 +24,15 @@ class Pickr_model extends CI_Model {
 	private $_ee;
 	
 	
+	/**
+	 * Flickr username member field ID.
+	 *
+	 * @access	private
+	 * @var		string
+	 */
+	private $_flickr_username_member_field_id;
+	
+	
 	
 	/* --------------------------------------------------------------
 	 * PUBLIC METHODS
@@ -38,6 +47,20 @@ class Pickr_model extends CI_Model {
 	public function __construct()
 	{
 		$this->_ee =& get_instance();
+		$this->_flickr_username_member_field_id = 'm_field_id_10';
+	}
+	
+	
+	/**
+	 * Returns the Flickr username member field ID. Hard-coded at present,
+	 * but could be moved to a config file or settings screen in the future.
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	public function get_flickr_username_member_field_id()
+	{
+		return $this->_flickr_username_member_field_id;
 	}
 	
 	
@@ -53,7 +76,8 @@ class Pickr_model extends CI_Model {
 		// Shortcuts.
 		$db =& $this->_ee->db;
 		
-		$db_member = $db->select('m_field_id_10')->get_where('member_data', array('member_id' => $member_id));
+		$db_member = $db->select($this->get_flickr_username_member_field_id())
+						->get_where('member_data', array('member_id' => $member_id));
 		
 		return $db_member->num_rows() === 1
 			? $db_member->row()->m_field_id_10

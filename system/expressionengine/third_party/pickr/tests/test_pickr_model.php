@@ -48,7 +48,7 @@ class Test_pickr_model extends Testee_unit_test_case {
 		// Dummy values.
 		$flickr_username 	= 'wibble';
 		$member_id 			= '5';
-		$member_field_id	= 'm_field_id_10';
+		$member_field_id	= $model->get_flickr_username_member_field_id();
 		
 		// Query row.
 		$db_row = new StdClass();
@@ -78,11 +78,6 @@ class Test_pickr_model extends Testee_unit_test_case {
 		$db 	=& $this->_ee->db;
 		$model	= $this->_ee->pickr_model;
 		
-		// Dummy values.
-		$flickr_username 	= 'wibble';
-		$member_id 			= '5';
-		$member_field_id	= 'm_field_id_10';
-		
 		// Query result.
 		$db_result = $this->_get_mock('query');
 		$db_result->setReturnValue('num_rows', 0);
@@ -92,7 +87,7 @@ class Test_pickr_model extends Testee_unit_test_case {
 		$db->setReturnReference('get_where', $db_result);
 		
 		// Run the tests.
-		$this->assertIdentical($model->get_member_flickr_username($member_id), '');
+		$this->assertIdentical($model->get_member_flickr_username('NULL'), '');
 	}
 	
 }
