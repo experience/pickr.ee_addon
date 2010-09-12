@@ -117,9 +117,11 @@ class Pickr_flickr {
 		}
 		
 		// Add all the required arguments to the args array.
-		$args['api_key']	= $this->_api_key;
-		$args['format']		= 'php_serial';
-		$args['method'] 	= $method;
+		$args = array_merge($args, array(
+			'api_key'	=> $this->_api_key,
+			'format'	=> 'php_serial',
+			'method'	=> $method
+		));
 		
 		// Prepare the arguments.
 		$clean_args = array();
