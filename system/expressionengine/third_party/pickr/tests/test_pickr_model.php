@@ -9,14 +9,9 @@
  */
 
 require_once PATH_THIRD .'pickr/models/pickr_model' .EXT;
+require_once PATH_THIRD .'pickr/tests/mocks/mock_pickr_flickr' .EXT;
 
 class Test_pickr_model extends Testee_unit_test_case {
-	
-	/* --------------------------------------------------------------
-	 * PRIVATE PROPERTIES
-	 * ------------------------------------------------------------ */
-	private $_model;
-	
 	
 	/* --------------------------------------------------------------
 	 * PUBLIC METHODS
@@ -32,6 +27,12 @@ class Test_pickr_model extends Testee_unit_test_case {
 	{
 		parent::setUp();
 		$this->_ee->load->model('pickr_model');
+		
+		// Mock the API connector object.
+		Mock::generate('Mock_pickr_flickr', 'Pickr_flickr');
+		
+		// Set the model API connector.
+		$this->_ee->pickr_model->set_api_connector(new Pickr_flickr());
 	}
 	
 	

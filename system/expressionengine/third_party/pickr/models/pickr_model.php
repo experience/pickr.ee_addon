@@ -16,6 +16,14 @@ class Pickr_model extends CI_Model {
 	 * ------------------------------------------------------------ */
 	
 	/**
+	 * The API connector.
+	 *
+	 * @access	private
+	 * @var		Pickr_flickr
+	 */
+	private $_api_connector;
+	
+	/**
 	 * The ExpressionEngine singleton.
 	 *
 	 * @access	private
@@ -142,6 +150,19 @@ class Pickr_model extends CI_Model {
 		);
 		
 		return (bool) $this->_ee->db->affected_rows();
+	}
+	
+	
+	/**
+	 * Sets the API connector.
+	 *
+	 * @access	public
+	 * @param	Pickr_flickr	$connector		The API connector.
+	 * @return	void
+	 */
+	public function set_api_connector(Pickr_flickr $connector)
+	{
+		$this->_api_connector = $connector;
 	}
 	
 }
