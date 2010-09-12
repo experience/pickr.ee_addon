@@ -90,6 +90,30 @@ class Test_pickr_model extends Testee_unit_test_case {
 		$this->assertIdentical($model->get_member_flickr_username('NULL'), '');
 	}
 	
+	
+	public function test_save_flickr_photo_a()
+	{
+		// Shortcuts.
+		$db		=& $this->_ee->db;
+		$model	= $this->_ee->pickr_model;
+		
+		// Dummy values.
+		$field_id	= 'm_field_id_20';
+		$member_id	= '5';
+		$photo_url	= 'http://myphoto.com/';
+		
+		// Query.
+		$data 	= array($field_id => $photo_url);
+		$where	= array('member_id' => $member_id);
+		
+		$db->expectOnce('update', array('member_data', $data, $where));
+		$db->expectOnce('affected_rows');
+		$db->setReturnValue('affected_rows', 1);
+		
+		// Run the tests.
+		$this->assertIdentical($model->save_member_flickr_photo($member_id, $photo_url), TRUE);
+	}
+	
 }
 
 /* End of file 		: test_pickr_model.php */

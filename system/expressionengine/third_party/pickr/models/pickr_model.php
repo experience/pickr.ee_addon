@@ -71,7 +71,7 @@ class Pickr_model extends CI_Model {
 	 * @param	int|string		$member_id		The member ID.
 	 * @return	string
 	 */
-	public function get_member_flickr_username($member_id = '')
+	public function get_member_flickr_username($member_id)
 	{
 		// Shortcuts.
 		$db =& $this->_ee->db;
@@ -82,6 +82,26 @@ class Pickr_model extends CI_Model {
 		return $db_member->num_rows() === 1
 			? $db_member->row()->m_field_id_10
 			: '';
+	}
+	
+	
+	/**
+	 * Saves a Flickr photo URL to the database.
+	 *
+	 * @access	public
+	 * @param	int|string		$member_id		The member ID.
+	 * @param 	string 			$url 			The photo URL.
+	 * @return	bool
+	 */
+	public function save_member_flickr_photo($member_id, $url)
+	{
+		$this->_ee->db->update(
+			'member_data',
+			array('m_field_id_20' => $url),
+			array('member_id' => $member_id)
+		);
+		
+		return (bool) $this->_ee->db->affected_rows();
 	}
 	
 }
