@@ -85,15 +85,29 @@ class Pickr_model extends CI_Model {
 	
 	
 	/**
-	 * Returns a Flickr user, given the username.
+	 * Returns a Flickr user's NSID, given the username.
 	 *
 	 * @access	public
 	 * @param	string	$username	The Flickr username.
 	 * @return	array
 	 */
-	public function get_flickr_user_from_username($username)
+	public function get_flickr_nsid_from_username($username)
 	{
-		return $this->_api_connector->people_find_by_username($username);
+		$result = $this->_api_connector->people_find_by_username($username);
+		return $result['user']['nsid'];
+	}
+	
+	
+	/**
+	 * Returns information about a Flickr user, given his NSID.
+	 *
+	 * @access	public
+	 * @param	string	$nsid	The Flickr user NSID.
+	 * @return	array
+	 */
+	public function get_flickr_user_info_from_nsid($nsid)
+	{
+		return $this->_api_connector->people_get_info($nsid);
 	}
 	
 	

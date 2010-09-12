@@ -132,13 +132,22 @@ class Test_pickr_model extends Testee_unit_test_case {
 	}
 	
 	
-	public function test_get_flickr_user_from_username__pass()
+	public function test_get_flickr_nsid_from_username__pass()
 	{
 		$model	= $this->_ee->pickr_model;
 		$conn	= new Pickr_flickr();			// Mock object.
 		
-		$flickr_username	= 'wibble';
-		$flickr_user		= array();
+		$flickr_username = 'wibble';
+		$flickr_nsid = '12345678@N00';
+		
+		$flickr_user = array(
+			'stat' => 'ok',
+			'user' => array(
+				'id'		=> $flickr_nsid,
+				'nsid'		=> $flickr_nsid,
+				'username'	=> array('_content' => $flickr_username)
+			)
+		);
 		
 		$conn->expectOnce('people_find_by_username', array($flickr_username));
 		$conn->setReturnReference('people_find_by_username', $flickr_user, array($flickr_username));
@@ -147,11 +156,11 @@ class Test_pickr_model extends Testee_unit_test_case {
 		$model->set_api_connector(&$conn);
 		
 		// Run the tests.
-		$this->assertIdentical($model->get_flickr_user_from_username($flickr_username), $flickr_user);
+		$this->assertIdentical($model->get_flickr_nsid_from_username($flickr_username), $flickr_nsid);
 	}
 	
 	
-	public function test_get_flickr_user_from_username__no_credentials()
+	public function test_get_flickr_nsid_from_username__no_credentials()
 	{
 		$model	= $this->_ee->pickr_model;
 		$conn	= new Pickr_flickr();
@@ -161,7 +170,41 @@ class Test_pickr_model extends Testee_unit_test_case {
 		
 		// Run the test.
 		$this->expectException(new Pickr_api_exception('API credentials not set.'));
-		$model->get_flickr_user_from_username('NULL');
+		$model->get_flickr_nsid_from_username('NULL');
+	}
+	
+	
+	public function test_get_flickr_nsid_from_username__api_exception()
+	{
+		$model		= $this->_ee->pickr_model;
+		$conn		= new Pickr_flickr();
+		$exception	= new Pickr_api_exception('User not found', '1');
+		
+		$conn->throwOn('people_find_by_username', $exception);
+		$model->set_api_connector(&$conn);
+		
+		// Run the test.
+		$this->expectException($exception);
+		$model->get_flickr_nsid_from_username('wibble');
+	}
+	
+	
+	public function test_get_flickr_user_info_from_nsid__pass()
+	{
+		$model	= $this->_ee->pickr_model;
+		$conn	= new Pickr_flickr();
+		
+		$flickr_nsid = '123456';
+		$flickr_info = array('example' => 'example');
+		
+		$conn->expectOnce('people_get_info', array($flickr_nsid));
+		$conn->setReturnReference('people_get_info', $flickr_info, array($flickr_nsid));
+		
+		// Set the model API connector.
+		$model->set_api_connector(&$conn);
+		
+		// Run the tests.
+		$this->assertIdentical($model->get_flickr_user_info_from_nsid($flickr_nsid), $flickr_info);
 	}
 	
 }

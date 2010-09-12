@@ -35,11 +35,11 @@ class Mock_pickr_flickr {
 		One or more arguments contained a URL that has been used for abuse on Flickr.
 	*/
 	
-	public function people_get_public_photos() {}
+	public function people_get_info() {}
 	
 	/*
 		1: User not found
-		The user NSID passed was not a valid user NSID.
+		The user id passed did not match a Flickr user.
 		100: Invalid API Key
 		The API key passed was not valid or has expired.
 		105: Service currently unavailable
