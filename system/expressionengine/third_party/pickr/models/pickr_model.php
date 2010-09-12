@@ -93,6 +93,8 @@ class Pickr_model extends CI_Model {
 	 */
 	public function get_flickr_nsid_from_username($username)
 	{
+		$this->_validate_api_connector();
+		
 		$result = $this->_api_connector->people_find_by_username($username);
 		return $result['user']['nsid'];
 	}
@@ -107,6 +109,8 @@ class Pickr_model extends CI_Model {
 	 */
 	public function get_flickr_user_buddy_icon($nsid)
 	{
+		$this->_validate_api_connector();
+		
 		$result = $this->_api_connector->people_get_info($nsid);
 		
 		$icon_farm		= $result['person']['iconfarm'];
@@ -199,6 +203,27 @@ class Pickr_model extends CI_Model {
 	public function set_api_connector(Pickr_flickr $connector)
 	{
 		$this->_api_connector = $connector;
+	}
+	
+	
+	
+	/* --------------------------------------------------------------
+	 * PRIVATE METHODS
+	 * ------------------------------------------------------------ */
+	
+	/**
+	 * Checks whether the API connector has been set. If not, throws an
+	 * exception.
+	 *
+	 * @access	private
+	 * @return	void
+	 */
+	private function _validate_api_connector()
+	{
+		if ( ! $this->_api_connector instanceof Pickr_flickr)
+		{
+			throw new Pickr_exception('API connector not set.');
+		}
 	}
 	
 }

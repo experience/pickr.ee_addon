@@ -14,8 +14,37 @@ require_once PATH_THIRD .'pickr/tests/mocks/mock_pickr_flickr' .EXT;
 class Test_pickr_model extends Testee_unit_test_case {
 	
 	/* --------------------------------------------------------------
+	 * PRIVATE PROPERTIES
+	 * ------------------------------------------------------------ */
+	
+	/**
+	 * Pickr model.
+	 *
+	 * @access	private
+	 * @var		Pickr_model
+	 */
+	private $_model;
+	
+	
+	
+	/* --------------------------------------------------------------
 	 * PUBLIC METHODS
 	 * ------------------------------------------------------------ */
+	
+	/**
+	 * Constructor.
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+		
+		// We only want to do this once.
+		$this->_ee->load->model('pickr_model');
+	}
+	
 	
 	/**
 	 * Runs before each test.
@@ -26,7 +55,9 @@ class Test_pickr_model extends Testee_unit_test_case {
 	public function setUp()
 	{
 		parent::setUp();
-		$this->_ee->load->model('pickr_model');
+		
+		// Doing this ensures a fresh model for each test.
+		$this->_model = new Pickr_model();
 		
 		// Mock the API connector object.
 		Mock::generate('Mock_pickr_flickr', 'Pickr_flickr');
@@ -41,7 +72,7 @@ class Test_pickr_model extends Testee_unit_test_case {
 	{
 		// Shortcuts.
 		$db 	=& $this->_ee->db;
-		$model	= $this->_ee->pickr_model;
+		$model	= $this->_model;
 		
 		// Dummy values.
 		$flickr_username 	= 'wibble';
@@ -74,7 +105,7 @@ class Test_pickr_model extends Testee_unit_test_case {
 	{
 		// Shortcuts.
 		$db 	=& $this->_ee->db;
-		$model	= $this->_ee->pickr_model;
+		$model	= $this->_model;
 		
 		// Query result.
 		$db_result = $this->_get_mock('query');
@@ -91,7 +122,7 @@ class Test_pickr_model extends Testee_unit_test_case {
 	
 	public function test_get_member_flickr_username__invalid_member_id()
 	{
-		$this->assertIdentical($this->_ee->pickr_model->get_member_flickr_username('NULL'), '');
+		$this->assertIdentical($this->_model->get_member_flickr_username('NULL'), '');
 	}
 	
 	
@@ -99,7 +130,7 @@ class Test_pickr_model extends Testee_unit_test_case {
 	{
 		// Shortcuts.
 		$db		=& $this->_ee->db;
-		$model	= $this->_ee->pickr_model;
+		$model	= $this->_model;
 		
 		// Dummy values.
 		$field_id	= $model->get_flickr_buddy_icon_member_field_id();
@@ -127,19 +158,19 @@ class Test_pickr_model extends Testee_unit_test_case {
 		$db->expectOnce('affected_rows');
 		$db->setReturnValue('affected_rows', 0);
 		
-		$this->assertIdentical($this->_ee->pickr_model->save_member_flickr_buddy_icon('10', ''), FALSE);
+		$this->assertIdentical($this->_model->save_member_flickr_buddy_icon('10', ''), FALSE);
 	}
 	
 	
 	public function test_save_member_flickr_buddy_icon__invalid_member_id()
 	{
-		$this->assertIdentical($this->_ee->pickr_model->save_member_flickr_buddy_icon('NULL', ''), FALSE);
+		$this->assertIdentical($this->_model->save_member_flickr_buddy_icon('NULL', ''), FALSE);
 	}
 	
 	
 	public function test_get_flickr_nsid_from_username__pass()
 	{
-		$model	= $this->_ee->pickr_model;
+		$model	= $this->_model;
 		$conn	= new Pickr_flickr();			// Mock object.
 		
 		$flickr_username = 'wibble';
@@ -167,7 +198,7 @@ class Test_pickr_model extends Testee_unit_test_case {
 	
 	public function test_get_flickr_nsid_from_username__no_credentials()
 	{
-		$model	= $this->_ee->pickr_model;
+		$model	= $this->_model;
 		$conn	= new Pickr_flickr();
 		
 		$conn->throwOn('people_find_by_username', new Pickr_api_exception('API credentials not set.'));
@@ -181,7 +212,7 @@ class Test_pickr_model extends Testee_unit_test_case {
 	
 	public function test_get_flickr_nsid_from_username__api_exception()
 	{
-		$model		= $this->_ee->pickr_model;
+		$model		= $this->_model;
 		$conn		= new Pickr_flickr();
 		$exception	= new Pickr_api_exception('User not found', '1');
 		
@@ -194,9 +225,22 @@ class Test_pickr_model extends Testee_unit_test_case {
 	}
 	
 	
+	public function test_get_flickr_nsid_from_username__no_api_connector()
+	{
+		/**
+		 * NOTE:
+		 * This confirms that the 'API connector' check works for all API-related
+		 * methods.
+		 */
+		
+		$this->expectException(new Pickr_exception('API connector not set.'));
+		$this->_model->get_flickr_nsid_from_username('wibble');
+	}
+	
+	
 	public function test_get_flickr_user_buddy_icon__pass()
 	{
-		$model	= $this->_ee->pickr_model;
+		$model	= $this->_model;
 		$conn	= new Pickr_flickr();
 		
 		$flickr_iconfarm	= '10';
@@ -243,7 +287,7 @@ class Test_pickr_model extends Testee_unit_test_case {
 	
 	public function test_get_flickr_user_buddy_icon__api_exception()
 	{
-		$model		= $this->_ee->pickr_model;
+		$model		= $this->_model;
 		$conn		= new Pickr_flickr();
 		$exception	= new Pickr_api_exception('User not found', '1');
 		
