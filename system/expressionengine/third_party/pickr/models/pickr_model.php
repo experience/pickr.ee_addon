@@ -95,15 +95,27 @@ class Pickr_model extends CI_Model {
 	 */
 	public function get_member_flickr_username($member_id)
 	{
+		$username = '';
+		
+		// Get out early.
+		if ( ! $member_id OR ! is_numeric($member_id)
+			OR intval($member_id) != $member_id)
+		{
+			return $username;
+		}
+		
 		// Shortcuts.
 		$db =& $this->_ee->db;
 		
 		$db_member = $db->select($this->get_flickr_username_member_field_id())
 						->get_where('member_data', array('member_id' => $member_id));
 		
-		return $db_member->num_rows() === 1
-			? $db_member->row()->m_field_id_10
-			: '';
+		if ($db_member->num_rows() === 1)
+		{
+			$username = $db_member->row()->m_field_id_10;
+		}
+		
+		return $username;
 	}
 	
 	

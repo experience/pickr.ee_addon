@@ -87,7 +87,13 @@ class Test_pickr_model extends Testee_unit_test_case {
 		$db->setReturnReference('get_where', $db_result);
 		
 		// Run the tests.
-		$this->assertIdentical($model->get_member_flickr_username('NULL'), '');
+		$this->assertIdentical($model->get_member_flickr_username('100'), '');
+	}
+	
+	
+	public function test_get_member_flickr_username__invalid_member_id()
+	{
+		$this->assertIdentical($this->_ee->pickr_model->get_member_flickr_username('NULL'), '');
 	}
 	
 	
