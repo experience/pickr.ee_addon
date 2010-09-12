@@ -118,8 +118,6 @@ class Test_pickr_model extends Testee_unit_test_case {
 	public function test_save_member_flickr_photo__not_saved()
 	{
 		$this->_ee->db->setReturnValue('affected_rows', 0);
-		
-		// Run the tests.
 		$this->assertIdentical($this->_ee->pickr_model->save_member_flickr_photo('', ''), FALSE);
 	}
 	
