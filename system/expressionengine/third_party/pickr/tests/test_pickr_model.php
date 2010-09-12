@@ -306,6 +306,18 @@ class Test_pickr_model extends Testee_unit_test_case {
 		$model->activate_extension();
 	}
 	
+	
+	public function test_disable_extension()
+	{
+		$model	= $this->_model;
+		$db		= $this->_ee->db;
+		
+		$db->expectOnce('delete', array('extensions', array('class' => $model->get_extension_class())));
+		
+		// Run the test.
+		$model->disable_extension();
+	}
+	
 }
 
 /* End of file 		: test_pickr_model.php */

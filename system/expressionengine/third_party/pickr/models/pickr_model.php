@@ -133,6 +133,18 @@ class Pickr_model extends CI_Model {
 	
 	
 	/**
+	 * Disables the extension.
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function disable_extension()
+	{
+		$this->_ee->db->delete('extensions', array('class' => $this->get_extension_class()));
+	}
+	
+	
+	/**
 	 * Returns the extension class name.
 	 *
 	 * @access	public
