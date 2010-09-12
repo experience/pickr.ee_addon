@@ -95,19 +95,19 @@ class Test_pickr_model extends Testee_unit_test_case {
 	}
 	
 	
-	public function test_save_member_flickr_photo__pass()
+	public function test_save_member_flickr_buddy_icon__pass()
 	{
 		// Shortcuts.
 		$db		=& $this->_ee->db;
 		$model	= $this->_ee->pickr_model;
 		
 		// Dummy values.
-		$field_id	= $model->get_flickr_photo_member_field_id();
+		$field_id	= $model->get_flickr_buddy_icon_member_field_id();
 		$member_id	= '5';
-		$photo_url	= 'http://myphoto.com/';
+		$icon_url	= 'http://myphoto.com/';
 		
 		// Query.
-		$data 	= array($field_id => $photo_url);
+		$data 	= array($field_id => $icon_url);
 		$where	= array('member_id' => $member_id);
 		
 		$db->expectOnce('update', array('member_data', $data, $where));
@@ -115,20 +115,25 @@ class Test_pickr_model extends Testee_unit_test_case {
 		$db->setReturnValue('affected_rows', 1);
 		
 		// Run the tests.
-		$this->assertIdentical($model->save_member_flickr_photo($member_id, $photo_url), TRUE);
+		$this->assertIdentical($model->save_member_flickr_buddy_icon($member_id, $icon_url), TRUE);
 	}
 	
 	
-	public function test_save_member_flickr_photo__not_saved()
+	public function test_save_member_flickr_buddy_icon__not_saved()
 	{
-		$this->_ee->db->setReturnValue('affected_rows', 0);
-		$this->assertIdentical($this->_ee->pickr_model->save_member_flickr_photo('', ''), FALSE);
+		$db =& $this->_ee->db;
+		
+		$db->expectOnce('update');
+		$db->expectOnce('affected_rows');
+		$db->setReturnValue('affected_rows', 0);
+		
+		$this->assertIdentical($this->_ee->pickr_model->save_member_flickr_buddy_icon('10', ''), FALSE);
 	}
 	
 	
-	public function test_save_member_flickr_photo__invalid_member_id()
+	public function test_save_member_flickr_buddy_icon__invalid_member_id()
 	{
-		$this->assertIdentical($this->_ee->pickr_model->save_member_flickr_photo('NULL', ''), FALSE);
+		$this->assertIdentical($this->_ee->pickr_model->save_member_flickr_buddy_icon('NULL', ''), FALSE);
 	}
 	
 	
@@ -189,22 +194,65 @@ class Test_pickr_model extends Testee_unit_test_case {
 	}
 	
 	
-	public function test_get_flickr_user_info_from_nsid__pass()
+	public function test_get_flickr_user_buddy_icon__pass()
 	{
 		$model	= $this->_ee->pickr_model;
 		$conn	= new Pickr_flickr();
 		
-		$flickr_nsid = '123456';
-		$flickr_info = array('example' => 'example');
+		$flickr_iconfarm	= '10';
+		$flickr_iconserver	= '20';
+		$flickr_nsid 		= '123456';
+		$flickr_username 	= 'wibble';
+		
+		$flickr_user = array(
+			'stat'		=> 'ok',
+			'person' 	=> array(
+				'id'			=> $flickr_nsid,
+				'nsid'			=> $flickr_nsid,
+				'ispro'			=> '0',
+				'iconserver'	=> $flickr_iconserver,
+				'iconfarm'		=> $flickr_iconfarm,
+				'path_alias'	=> $flickr_username,
+				'username'		=> array('_content' => $flickr_username),
+				'realname'		=> array('_content' => 'Ewan the Photo'),
+				'mbox_sha1sum'	=> array('_content' => '6e558ded4d3226ef7188b9ff70624fe4a4912622'),
+				'location'		=> array('_content' => 'Caerphilly, Wales'),
+				'photosurl'		=> array('_content' => 'http://flickr.com/photos/' .$flickr_username),
+				'profileurl'	=> array('_content' => 'http://flickr.com/people/' .$flickr_username),
+				'mobileurl'		=> array('_content' => 'http://m.flickr.com/photostream.gne?id=1234567'),
+				'photos'		=> array(
+					'firstdatetaken'	=> '2005-01-01 01:00:00',
+					'firstdate'			=> '1234567890',
+					'count'				=> '200'
+				)
+			)
+		);
+		
+		$buddy_icon = 'http://farm' .$flickr_iconfarm .'.static.flickr.com/' .$flickr_iconserver .'/buddyicons/' .$flickr_nsid .'.jpg';
 		
 		$conn->expectOnce('people_get_info', array($flickr_nsid));
-		$conn->setReturnReference('people_get_info', $flickr_info, array($flickr_nsid));
+		$conn->setReturnReference('people_get_info', $flickr_user, array($flickr_nsid));
 		
 		// Set the model API connector.
 		$model->set_api_connector(&$conn);
 		
 		// Run the tests.
-		$this->assertIdentical($model->get_flickr_user_info_from_nsid($flickr_nsid), $flickr_info);
+		$this->assertIdentical($model->get_flickr_user_buddy_icon($flickr_nsid), $buddy_icon);
+	}
+	
+	
+	public function test_get_flickr_user_buddy_icon__api_exception()
+	{
+		$model		= $this->_ee->pickr_model;
+		$conn		= new Pickr_flickr();
+		$exception	= new Pickr_api_exception('User not found', '1');
+		
+		$conn->throwOn('people_get_info', $exception);
+		$model->set_api_connector(&$conn);
+		
+		// Run the test.
+		$this->expectException($exception);
+		$model->get_flickr_user_buddy_icon('wibble');
 	}
 	
 }

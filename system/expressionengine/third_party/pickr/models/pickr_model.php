@@ -34,12 +34,12 @@ class Pickr_model extends CI_Model {
 	private $_ee;
 	
 	/**
-	 * Flickr photo member field ID.
+	 * Flickr buddy icon member field ID.
 	 *
 	 * @access	private
 	 * @var		string
 	 */
-	private $_flickr_photo_member_field_id;
+	private $_flickr_buddy_icon_member_field_id;
 	
 	/**
 	 * Flickr username member field ID.
@@ -66,21 +66,21 @@ class Pickr_model extends CI_Model {
 		$this->_ee =& get_instance();
 		$this->_ee->load->helper('pickr_number_helper');
 		
-		$this->_flickr_photo_member_field_id	= 'm_field_id_20';
-		$this->_flickr_username_member_field_id = 'm_field_id_10';
+		$this->_flickr_buddy_icon_member_field_id	= 'm_field_id_20';
+		$this->_flickr_username_member_field_id 	= 'm_field_id_10';
 	}
 	
 	
 	/**
-	 * Returns the Flickr photo member field ID. Hard-coded at present,
+	 * Returns the Flickr buddy icon member field ID. Hard-coded at present,
 	 * but could be moved to a config file or settings screen in the future.
 	 *
 	 * @access	public
 	 * @return	string
 	 */
-	public function get_flickr_photo_member_field_id()
+	public function get_flickr_buddy_icon_member_field_id()
 	{
-		return $this->_flickr_photo_member_field_id;
+		return $this->_flickr_buddy_icon_member_field_id;
 	}
 	
 	
@@ -99,15 +99,20 @@ class Pickr_model extends CI_Model {
 	
 	
 	/**
-	 * Returns information about a Flickr user, given his NSID.
+	 * Returns the Flickr user's buddy icon URL.
 	 *
 	 * @access	public
-	 * @param	string	$nsid	The Flickr user NSID.
+	 * @param	string	$nsid	The Flickr user's NSID.
 	 * @return	array
 	 */
-	public function get_flickr_user_info_from_nsid($nsid)
+	public function get_flickr_user_buddy_icon($nsid)
 	{
-		return $this->_api_connector->people_get_info($nsid);
+		$result = $this->_api_connector->people_get_info($nsid);
+		
+		$icon_farm		= $result['person']['iconfarm'];
+		$icon_server	= $result['person']['iconserver'];
+		
+		return 'http://farm' .$icon_farm .'.static.flickr.com/' .$icon_server .'/buddyicons/' .$nsid .'.jpg';
 	}
 	
 	
@@ -157,14 +162,14 @@ class Pickr_model extends CI_Model {
 	
 	
 	/**
-	 * Saves a Flickr photo URL to the database.
+	 * Saves a Flickr buddy icon URL to the database.
 	 *
 	 * @access	public
 	 * @param	int|string		$member_id		The member ID.
-	 * @param 	string 			$url 			The photo URL.
+	 * @param 	string 			$url 			The buddy icon URL.
 	 * @return	bool
 	 */
-	public function save_member_flickr_photo($member_id, $url)
+	public function save_member_flickr_buddy_icon($member_id, $url)
 	{
 		// Get out early. Uses pickr_number_helper function.
 		if ( ! valid_database_id($member_id))
@@ -172,10 +177,12 @@ class Pickr_model extends CI_Model {
 			return FALSE;
 		}
 		
+		$member_field = $this->get_flickr_buddy_icon_member_field_id();
+		
 		$this->_ee->db->update(
 			'member_data',
-			array('m_field_id_20' => $url),
-			array('member_id' => $member_id)
+			array($member_field	=> $url),
+			array('member_id'	=> $member_id)
 		);
 		
 		return (bool) $this->_ee->db->affected_rows();
