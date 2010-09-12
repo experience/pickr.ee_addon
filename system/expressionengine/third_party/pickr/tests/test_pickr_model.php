@@ -98,7 +98,7 @@ class Test_pickr_model extends Testee_unit_test_case {
 		$model	= $this->_ee->pickr_model;
 		
 		// Dummy values.
-		$field_id	= 'm_field_id_20';
+		$field_id	= $model->get_flickr_photo_member_field_id();
 		$member_id	= '5';
 		$photo_url	= 'http://myphoto.com/';
 		
