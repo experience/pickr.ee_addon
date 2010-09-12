@@ -54,6 +54,7 @@ class Pickr_model extends CI_Model {
 	public function __construct()
 	{
 		$this->_ee =& get_instance();
+		$this->_ee->load->helper('pickr_number_helper');
 		
 		$this->_flickr_photo_member_field_id	= 'm_field_id_20';
 		$this->_flickr_username_member_field_id = 'm_field_id_10';
@@ -97,9 +98,8 @@ class Pickr_model extends CI_Model {
 	{
 		$username = '';
 		
-		// Get out early.
-		if ( ! $member_id OR ! is_numeric($member_id)
-			OR intval($member_id) != $member_id)
+		// Get out early. Uses pickr_number_helper function.
+		if ( ! valid_database_id($member_id))
 		{
 			return $username;
 		}
@@ -129,9 +129,8 @@ class Pickr_model extends CI_Model {
 	 */
 	public function save_member_flickr_photo($member_id, $url)
 	{
-		// Get out early.
-		if ( ! $member_id OR ! is_numeric($member_id)
-			OR intval($member_id) != $member_id)
+		// Get out early. Uses pickr_number_helper function.
+		if ( ! valid_database_id($member_id))
 		{
 			return FALSE;
 		}
