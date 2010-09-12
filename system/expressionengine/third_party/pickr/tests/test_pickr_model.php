@@ -32,21 +32,6 @@ class Test_pickr_model extends Testee_unit_test_case {
 	 * ------------------------------------------------------------ */
 	
 	/**
-	 * Constructor.
-	 *
-	 * @access	public
-	 * @return	void
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		
-		// We only want to do this once.
-		$this->_ee->load->model('pickr_model');
-	}
-	
-	
-	/**
 	 * Runs before each test.
 	 *
 	 * @access	public
