@@ -39,7 +39,7 @@ class Test_pickr_model extends Testee_unit_test_case {
 	 * TEST METHODS
 	 * ------------------------------------------------------------ */
 	
-	public function test_get_member_flickr_username_a()
+	public function test_get_member_flickr_username__pass()
 	{
 		// Shortcuts.
 		$db 	=& $this->_ee->db;
@@ -72,7 +72,7 @@ class Test_pickr_model extends Testee_unit_test_case {
 	}
 	
 	
-	public function test_get_member_flickr_username_b()
+	public function test_get_member_flickr_username__unknown_member()
 	{
 		// Shortcuts.
 		$db 	=& $this->_ee->db;
@@ -91,7 +91,7 @@ class Test_pickr_model extends Testee_unit_test_case {
 	}
 	
 	
-	public function test_save_flickr_photo_a()
+	public function test_save_member_flickr_photo__pass()
 	{
 		// Shortcuts.
 		$db		=& $this->_ee->db;
@@ -112,6 +112,15 @@ class Test_pickr_model extends Testee_unit_test_case {
 		
 		// Run the tests.
 		$this->assertIdentical($model->save_member_flickr_photo($member_id, $photo_url), TRUE);
+	}
+	
+	
+	public function test_save_member_flickr_photo__not_saved()
+	{
+		$this->_ee->db->setReturnValue('affected_rows', 0);
+		
+		// Run the tests.
+		$this->assertIdentical($this->_ee->pickr_model->save_member_flickr_photo('', ''), FALSE);
 	}
 	
 }
