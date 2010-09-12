@@ -285,6 +285,27 @@ class Test_pickr_model extends Testee_unit_test_case {
 		$model->get_flickr_user_buddy_icon('wibble');
 	}
 	
+	
+	public function test_activate_extension()
+	{
+		$model 	= $this->_model;
+		$db 	= $this->_ee->db;
+		
+		$data = array(
+			'class'		=> $model->get_extension_class(),
+			'enabled'	=> 'y',
+			'hook'		=> 'member_register_validate_members',
+			'method'	=> 'on_member_register_validate_members',
+			'settings'	=> '',
+			'version'	=> $model->get_package_version()
+		);
+		
+		$db->expectOnce('insert', array('extensions', $data));
+		
+		// Run the test.
+		$model->activate_extension();
+	}
+	
 }
 
 /* End of file 		: test_pickr_model.php */

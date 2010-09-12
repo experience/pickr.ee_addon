@@ -34,6 +34,15 @@ class Pickr_model extends CI_Model {
 	private $_ee;
 	
 	/**
+	 * Extension class. Assumed to be the package name,
+	 * with an `_ext` suffix.
+	 *
+	 * @access	private
+	 * @var		string
+	 */
+	private $_extension_class;
+	
+	/**
 	 * Flickr buddy icon member field ID.
 	 *
 	 * @access	private
@@ -49,6 +58,30 @@ class Pickr_model extends CI_Model {
 	 */
 	private $_flickr_username_member_field_id;
 	
+	/**
+	 * Package name.
+	 *
+	 * @access	private
+	 * @var		string
+	 */
+	private $_package_name;
+	
+	/**
+	 * Package version.
+	 *
+	 * @access	private
+	 * @var		string
+	 */
+	private $_package_version;
+	
+	/**
+	 * The site ID.
+	 *
+	 * @access	private
+	 * @var		string
+	 */
+	private $_site_id;
+	
 	
 	
 	/* --------------------------------------------------------------
@@ -63,11 +96,51 @@ class Pickr_model extends CI_Model {
 	 */
 	public function __construct()
 	{
+		parent::CI_Model();
+		
 		$this->_ee =& get_instance();
 		$this->_ee->load->helper('pickr_number_helper');
 		
 		$this->_flickr_buddy_icon_member_field_id	= 'm_field_id_20';
 		$this->_flickr_username_member_field_id 	= 'm_field_id_10';
+		
+		$this->_package_name	= 'Pickr';
+		$this->_package_version	= '0.1.0';
+		$this->_site_id 		= $this->_ee->config->item('site_id');
+		$this->_extension_class = ucfirst($this->get_package_name() .'_ext');
+	}
+	
+	
+	/**
+	 * Activates the extension.
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function activate_extension()
+	{
+		$data = array(
+			'class'		=> $this->get_extension_class(),
+			'enabled'	=> 'y',
+			'hook'		=> 'member_register_validate_members',
+			'method'	=> 'on_member_register_validate_members',
+			'settings'	=> '',
+			'version'	=> $this->get_package_version()
+		);
+		
+		$this->_ee->db->insert('extensions', $data);
+	}
+	
+	
+	/**
+	 * Returns the extension class name.
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	public function get_extension_class()
+	{
+		return $this->_extension_class;
 	}
 	
 	
@@ -162,6 +235,42 @@ class Pickr_model extends CI_Model {
 		}
 		
 		return $username;
+	}
+	
+	
+	/**
+	 * Returns the package name.
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	public function get_package_name()
+	{
+		return $this->_package_name;
+	}
+	
+	
+	/**
+	 * Returns the package version.
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	public function get_package_version()
+	{
+		return $this->_package_version;
+	}
+	
+	
+	/**
+	 * Returns the site ID.
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	public function get_site_id()
+	{
+		return $this->_site_id;
 	}
 	
 	
