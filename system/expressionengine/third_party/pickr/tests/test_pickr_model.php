@@ -31,7 +31,7 @@ class Test_pickr_model extends Testee_unit_test_case {
 	public function setUp()
 	{
 		parent::setUp();
-		$this->_model = $this->_ee->load->model('pickr_model');
+		$this->_ee->load->model('pickr_model');
 	}
 	
 	
@@ -41,8 +41,9 @@ class Test_pickr_model extends Testee_unit_test_case {
 	
 	public function test_get_member_flickr_username()
 	{
-		// Shortcut.
-		$db =& $this->_ee->db;
+		// Shortcuts.
+		$db 	=& $this->_ee->db;
+		$model	= $this->_ee->pickr_model;
 		
 		// Dummy values.
 		$flickr_username 	= 'wibble';
@@ -61,13 +62,13 @@ class Test_pickr_model extends Testee_unit_test_case {
 		
 		// Database.
 		$db->expectOnce('select', array($member_field_id));
-		$db->expectOnce('get_where', array('exp_member_data', array('member_id' => $member_id)));
+		$db->expectOnce('get_where', array('member_data', array('member_id' => $member_id)));
 		
 		$db->setReturnReference('select', $db);
 		$db->setReturnReference('get_where', $db_result);
 		
 		// Run the tests.
-		$this->assertIdentical($this->_model->get_member_flickr_username(), $flickr_username);
+		$this->assertIdentical($model->get_member_flickr_username($member_id), $flickr_username);
 	}
 	
 }
