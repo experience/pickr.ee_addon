@@ -9,6 +9,8 @@
  * @version 		0.1.0
  */
 
+require_once PATH_THIRD .'pickr/classes/pickr_exceptions' .EXT;
+
 class Pickr_model extends CI_Model {
 	
 	/* --------------------------------------------------------------

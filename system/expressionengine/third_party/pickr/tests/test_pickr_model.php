@@ -156,11 +156,11 @@ class Test_pickr_model extends Testee_unit_test_case {
 		$model	= $this->_ee->pickr_model;
 		$conn	= new Pickr_flickr();
 		
-		$conn->throwOn('people_find_by_username', new Exception('API credentials not set.'));		
+		$conn->throwOn('people_find_by_username', new Pickr_api_exception('API credentials not set.'));
 		$model->set_api_connector(&$conn);
 		
 		// Run the test.
-		$this->expectException(new Exception('API credentials not set.'));
+		$this->expectException(new Pickr_api_exception('API credentials not set.'));
 		$model->get_flickr_user_from_username('NULL');
 	}
 	
