@@ -129,6 +129,13 @@ class Pickr_model extends CI_Model {
 	 */
 	public function save_member_flickr_photo($member_id, $url)
 	{
+		// Get out early.
+		if ( ! $member_id OR ! is_numeric($member_id)
+			OR intval($member_id) != $member_id)
+		{
+			return FALSE;
+		}
+		
 		$this->_ee->db->update(
 			'member_data',
 			array('m_field_id_20' => $url),

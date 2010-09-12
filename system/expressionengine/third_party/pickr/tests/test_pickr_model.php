@@ -127,6 +127,12 @@ class Test_pickr_model extends Testee_unit_test_case {
 		$this->assertIdentical($this->_ee->pickr_model->save_member_flickr_photo('', ''), FALSE);
 	}
 	
+	
+	public function test_save_member_flickr_photo__invalid_member_id()
+	{
+		$this->assertIdentical($this->_ee->pickr_model->save_member_flickr_photo('NULL', ''), FALSE);
+	}
+	
 }
 
 /* End of file 		: test_pickr_model.php */
