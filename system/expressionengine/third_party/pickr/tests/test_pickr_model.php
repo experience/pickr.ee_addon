@@ -198,14 +198,15 @@ class Test_pickr_model extends Testee_unit_test_case {
 	
 	public function test_get_flickr_nsid_from_username__no_credentials()
 	{
-		$model	= $this->_model;
-		$conn	= new Pickr_flickr();
+		$model		= $this->_model;
+		$conn		= new Pickr_flickr();
+		$exception 	= new Pickr_exception('API credentials not set.');
 		
-		$conn->throwOn('people_find_by_username', new Pickr_api_exception('API credentials not set.'));
+		$conn->throwOn('people_find_by_username', $exception);
 		$model->set_api_connector(&$conn);
 		
 		// Run the test.
-		$this->expectException(new Pickr_api_exception('API credentials not set.'));
+		$this->expectException($exception);
 		$model->get_flickr_nsid_from_username('NULL');
 	}
 	
