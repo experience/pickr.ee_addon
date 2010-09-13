@@ -109,8 +109,8 @@ class Pickr_model extends CI_Model {
 		$this->_ee =& get_instance();
 		$this->_ee->load->helper('pickr_number_helper');
 		
-		$this->_flickr_buddy_icon_member_field_id	= 'm_field_id_20';
-		$this->_flickr_username_member_field_id 	= 'm_field_id_10';
+		$this->_flickr_username_member_field_id 	= 'm_field_id_1';
+		$this->_flickr_buddy_icon_member_field_id	= 'm_field_id_2';
 		
 		$this->_package_name	= 'Pickr';
 		$this->_package_version	= '0.1.0';

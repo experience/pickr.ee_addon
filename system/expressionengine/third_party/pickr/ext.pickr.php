@@ -183,6 +183,7 @@ class Pickr_ext {
 		catch (Pickr_exception $e)
 		{
 			// Do nothing. Maybe log something in the future.
+			error_log('Exception occurred: ' .$e->getMessage() .' / ' .$e->getCode());
 		}
 	}
 	
