@@ -8,6 +8,8 @@
  * @copyright 		Experience Internet
  */
 
+if ( ! class_exists('Pickr_flickr')) require_once PATH_THIRD .'pickr/libraries/pickr_flickr' .EXT;
+
 class Pickr_ext {
 	
 	/* --------------------------------------------------------------
@@ -169,6 +171,11 @@ class Pickr_ext {
 	 */
 	public function on_member_register_validate_members($member_id)
 	{
+		// Set the model API connector.
+		$credentials = $this->_model->get_api_credentials();
+		$connector = new Pickr_flickr($credentials['api_key'], $credentials['secret_key']);
+		$this->_model->set_api_connector($connector);
+		
 		try
 		{
 			$this->_model->get_member_flickr_buddy_icon($member_id);

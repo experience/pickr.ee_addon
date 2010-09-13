@@ -16,6 +16,7 @@ class Mock_pickr_model {
 	 * ------------------------------------------------------------ */
 	public function activate_extension() {}
 	public function disable_extension() {}
+	public function get_api_credentials() {}
 	public function get_extension_class() {}
 	public function get_flickr_buddy_icon_member_field_id() {}
 	public function get_flickr_nsid_from_username() {}

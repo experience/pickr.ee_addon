@@ -26,6 +26,14 @@ class Pickr_model extends CI_Model {
 	private $_api_connector;
 	
 	/**
+	 * The API credentials.
+	 *
+	 * @access	private
+	 * @var		string
+	 */
+	private $_api_credentials;
+	
+	/**
 	 * The ExpressionEngine singleton.
 	 *
 	 * @access	private
@@ -108,6 +116,12 @@ class Pickr_model extends CI_Model {
 		$this->_package_version	= '0.1.0';
 		$this->_site_id 		= $this->_ee->config->item('site_id');
 		$this->_extension_class = ucfirst($this->get_package_name() .'_ext');
+		
+		// API credentials are hard-coded at present.
+		$this->_api_credentials	= array(
+			'api_key'		=> 'ea038ecba7beb53f558fbb7bfea394bd',
+			'secret_key'	=> '0a5a45d2ba2d0121'
+		);
 	}
 	
 	
@@ -141,6 +155,19 @@ class Pickr_model extends CI_Model {
 	public function disable_extension()
 	{
 		$this->_ee->db->delete('extensions', array('class' => $this->get_extension_class()));
+	}
+	
+	
+	/**
+	 * Returns the API credentials. Hard-coded at present, but may be
+	 * loading from settings in the future.
+	 *
+	 * @access	public
+	 * @return	array
+	 */
+	public function get_api_credentials()
+	{
+		return $this->_api_credentials;
 	}
 	
 	

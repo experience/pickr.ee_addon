@@ -9,7 +9,8 @@
  */
 
 require_once PATH_THIRD .'pickr/ext.pickr' .EXT;
-require_once PATH_THIRD .'pickr/tests/mocks/mock_pickr_model' .EXT;;
+require_once PATH_THIRD .'pickr/tests/mocks/mock_pickr_flickr' .EXT;
+require_once PATH_THIRD .'pickr/tests/mocks/mock_pickr_model' .EXT;
 
 class Test_pickr_ext extends Testee_unit_test_case {
 	
@@ -49,8 +50,9 @@ class Test_pickr_ext extends Testee_unit_test_case {
 	{
 		parent::setUp();
 		
-		// Mock the model.
+		// Mocks.
 		Mock::generate('Mock_pickr_model', 'Pickr_model');
+		Mock::generate('Mock_pickr_flickr', 'Pickr_flickr');
 		
 		$this->_model	= new Pickr_model();
 		$this->_ext 	= new Pickr_ext(array(), $this->_model);
@@ -95,8 +97,13 @@ class Test_pickr_ext extends Testee_unit_test_case {
 	{
 		$model 		= $this->_model;
 		$member_id	= '10';
+		$credentials = array('api_key' => '1234567890', 'secret_key' => 'ssshhh');
 		
+		$model->expectOnce('get_api_credentials');
+		$model->setReturnValue('get_api_credentials', $credentials);
+		$model->expectOnce('set_api_connector', array(new Pickr_flickr($credentials['api_key'], $credentials['secret_key'])));
 		$model->expectOnce('get_member_flickr_buddy_icon', array($member_id));
+		
 		$this->_ext->on_member_register_validate_members($member_id);
 	}
 	
