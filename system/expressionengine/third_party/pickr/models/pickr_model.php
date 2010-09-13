@@ -219,6 +219,41 @@ class Pickr_model extends CI_Model {
 	
 	
 	/**
+	 * Loads a member's Flickr buddy icon. A convenience wrapper for a bunch of other
+	 * methods.
+	 *
+	 * @access	public
+	 * @param	int|string		$member_id		The member ID.
+	 * @return	bool
+	 */
+	public function get_member_flickr_buddy_icon($member_id)
+	{
+		if ( ! $username = $this->get_member_flickr_username($member_id))
+		{
+			/**
+			 * Not entirely comfortable with this, but then it doesn't
+			 * seem like an exceptional circumstance either.
+			 */
+			
+			return FALSE;
+		}
+		
+		/**
+		 * Retrieve the buddy icon. If anything goes wrong, an exception is
+		 * throw, and we just let it bubble.
+		 */
+		
+		$user_id	= $this->get_flickr_nsid_from_username($username);
+		$icon_url	= $this->get_flickr_user_buddy_icon($user_id);
+		
+		// Save the icon to the database.
+		$this->save_member_flickr_buddy_icon($icon_url);
+		
+		return TRUE;
+	}
+	
+	
+	/**
 	 * Loads a member's Flickr username, given the member ID.
 	 *
 	 * @access	public
