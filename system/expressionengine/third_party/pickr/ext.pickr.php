@@ -22,6 +22,14 @@ class Pickr_ext {
 	 */
 	private $_ee;
 	
+	/**
+	 * Model.
+	 *
+	 * @access	private
+	 * @var		Pickr_model
+	 */
+	private $_model;
+	
 	
 	/* --------------------------------------------------------------
 	 * PUBLIC PROPERTIES
@@ -77,16 +85,26 @@ class Pickr_ext {
 	 * Class constructor.
 	 *
 	 * @access	public
-	 * @param	array 		$settings		Previously-saved extension settings.
+	 * @param	array 			$settings		Previously-saved extension settings.
+	 * @param 	Pickr_model		$model			Model. Passed directly to constructor during testing.
 	 * @return	void
 	 */
-	public function __construct($settings = array())
+	public function __construct($settings = array(), Pickr_model $model = NULL)
 	{
 		$this->_ee =& get_instance();
 		
-		// Load the model.
-		$this->_ee->load->add_package_path(PATH_THIRD .'pickr/');
-		$this->_ee->load->model('pickr_model');
+		// Load the model, if required.
+		if ($model)
+		{
+			$this->_model = $model;
+		}
+		else
+		{
+			$this->_ee->load->add_package_path(PATH_THIRD .'pickr/');
+			$this->_ee->load->model('pickr_model');
+			
+			$this->_model = $this->_ee->pickr_model;
+		}
 		
 		// Load the language file.
 		$this->_ee->lang->loadfile('pickr');
@@ -95,7 +113,7 @@ class Pickr_ext {
 		$this->description	= $this->_ee->lang->line('extension_description');
 		$this->docs_url		= 'http://experienceinternet.co.uk/software/pickr/';
 		$this->name			= $this->_ee->lang->line('extension_name');
-		$this->version		= $this->_ee->pickr_model->get_package_version();
+		$this->version		= $this->_model->get_package_version();
 	}
 	
 	
@@ -107,7 +125,7 @@ class Pickr_ext {
 	 */
 	public function activate_extension()
 	{
-		$this->_ee->pickr_model->activate_extension();
+		$this->_model->activate_extension();
 	}
 	
 	
@@ -119,7 +137,7 @@ class Pickr_ext {
 	 */
 	public function disable_extension()
 	{
-		$this->_ee->pickr_model->disable_extension();
+		$this->_model->disable_extension();
 	}
 	
 	
@@ -132,7 +150,7 @@ class Pickr_ext {
 	 */
 	public function update_extension($current_version = '')
 	{
-		return $this->_ee->pickr_model->update_extension($current_version, $this->_ee->pickr_model->get_package_version());
+		return $this->_model->update_extension($current_version, $this->_model->get_package_version());
 	}
 	
 	
