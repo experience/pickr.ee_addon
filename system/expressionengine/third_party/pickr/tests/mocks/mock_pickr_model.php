@@ -21,6 +21,7 @@ class Mock_pickr_model {
 	public function get_flickr_nsid_from_username() {}
 	public function get_flickr_user_buddy_icon() {}
 	public function get_flickr_username_member_field_id() {}
+	public function get_member_flickr_buddy_icon() {}
 	public function get_member_flickr_username() {}
 	public function get_package_name() {}
 	public function get_package_version() {}

@@ -90,6 +90,16 @@ class Test_pickr_ext extends Testee_unit_test_case {
 		$this->assertIdentical($this->_ext->update_extension($version), FALSE);
 	}
 	
+	
+	public function test_on_member_register_validate_members()
+	{
+		$model 		= $this->_model;
+		$member_id	= '10';
+		
+		$model->expectOnce('get_member_flickr_buddy_icon', array($member_id));
+		$this->_ext->on_member_register_validate_members($member_id);
+	}
+	
 }
 
 

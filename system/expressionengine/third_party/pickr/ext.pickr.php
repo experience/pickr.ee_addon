@@ -169,7 +169,14 @@ class Pickr_ext {
 	 */
 	public function on_member_register_validate_members($member_id)
 	{
-		
+		try
+		{
+			$this->_model->get_member_flickr_buddy_icon($member_id);
+		}
+		catch (Pickr_exception $e)
+		{
+			// Do nothing. Maybe log something in the future.
+		}
 	}
 	
 }
