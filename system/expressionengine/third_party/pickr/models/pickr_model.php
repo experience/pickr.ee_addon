@@ -274,7 +274,7 @@ class Pickr_model extends CI_Model {
 		$icon_url	= $this->get_flickr_user_buddy_icon($user_id);
 		
 		// Save the icon to the database.
-		$this->save_member_flickr_buddy_icon($icon_url);
+		$this->save_member_flickr_buddy_icon($member_id, $icon_url);
 		
 		return TRUE;
 	}
@@ -298,14 +298,13 @@ class Pickr_model extends CI_Model {
 		}
 		
 		// Shortcuts.
-		$db =& $this->_ee->db;
-		
-		$db_member = $db->select($this->get_flickr_username_member_field_id())
-						->get_where('member_data', array('member_id' => $member_id));
+		$db			= $this->_ee->db;
+		$field_id 	= $this->get_flickr_username_member_field_id();
+		$db_member 	= $db->select($field_id)->get_where('member_data', array('member_id' => $member_id));
 		
 		if ($db_member->num_rows() === 1)
 		{
-			$username = $db_member->row()->m_field_id_10;
+			$username = $db_member->row()->$field_id;
 		}
 		
 		return $username;
