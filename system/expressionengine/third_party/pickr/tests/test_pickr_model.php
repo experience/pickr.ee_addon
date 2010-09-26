@@ -56,7 +56,7 @@ class Test_pickr_model extends Testee_unit_test_case {
 	public function test_get_member_flickr_username__pass()
 	{
 		// Shortcuts.
-		$db 	=& $this->_ee->db;
+		$db 	= $this->_ee->db;
 		$model	= $this->_model;
 		
 		// Dummy values.
@@ -69,7 +69,7 @@ class Test_pickr_model extends Testee_unit_test_case {
 		$db_row->$member_field_id = $flickr_username;
 		
 		// Query result.
-		$db_result = $this->_get_mock('query');
+		$db_result = $this->_get_mock('db_query');
 		$db_result->expectOnce('row');
 		$db_result->setReturnValue('num_rows', 1);
 		$db_result->setReturnReference('row', $db_row);
@@ -89,11 +89,11 @@ class Test_pickr_model extends Testee_unit_test_case {
 	public function test_get_member_flickr_username__unknown_member()
 	{
 		// Shortcuts.
-		$db 	=& $this->_ee->db;
+		$db 	= $this->_ee->db;
 		$model	= $this->_model;
 		
 		// Query result.
-		$db_result = $this->_get_mock('query');
+		$db_result = $this->_get_mock('db_query');
 		$db_result->setReturnValue('num_rows', 0);
 		
 		// Database.
@@ -114,7 +114,7 @@ class Test_pickr_model extends Testee_unit_test_case {
 	public function test_save_member_flickr_buddy_icon__pass()
 	{
 		// Shortcuts.
-		$db		=& $this->_ee->db;
+		$db		= $this->_ee->db;
 		$model	= $this->_model;
 		
 		// Dummy values.
@@ -137,7 +137,7 @@ class Test_pickr_model extends Testee_unit_test_case {
 	
 	public function test_save_member_flickr_buddy_icon__not_saved()
 	{
-		$db =& $this->_ee->db;
+		$db = $this->_ee->db;
 		
 		$db->expectOnce('update');
 		$db->expectOnce('affected_rows');

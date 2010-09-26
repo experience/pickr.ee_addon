@@ -107,7 +107,6 @@ class Pickr_model extends CI_Model {
 		parent::CI_Model();
 		
 		$this->_ee =& get_instance();
-		$this->_ee->load->helper('pickr_number_helper');
 		
 		$this->_flickr_username_member_field_id 	= 'm_field_id_1';
 		$this->_flickr_buddy_icon_member_field_id	= 'm_field_id_2';
@@ -292,7 +291,7 @@ class Pickr_model extends CI_Model {
 		$username = '';
 		
 		// Get out early. Uses pickr_number_helper function.
-		if ( ! valid_database_id($member_id))
+		if ( ! $this->_valid_id($member_id))
 		{
 			return $username;
 		}
@@ -358,7 +357,7 @@ class Pickr_model extends CI_Model {
 	public function save_member_flickr_buddy_icon($member_id, $url)
 	{
 		// Get out early. Uses pickr_number_helper function.
-		if ( ! valid_database_id($member_id))
+		if ( ! $this->_valid_id($member_id))
 		{
 			return FALSE;
 		}
@@ -416,6 +415,19 @@ class Pickr_model extends CI_Model {
 	/* --------------------------------------------------------------
 	 * PRIVATE METHODS
 	 * ------------------------------------------------------------ */
+	
+	/**
+	 * Determines whether the supplied argument evaluates to a valid numerical ID.
+	 *
+	 * @access	private
+	 * @param	int|string	$id	The ID to evaluate.
+	 * @return	bool
+	 */
+	private function _valid_id($id)
+	{
+		return ($id && is_numeric($id) && intval($id) == $id);
+	}
+	
 	
 	/**
 	 * Checks whether the API connector has been set. If not, throws an
