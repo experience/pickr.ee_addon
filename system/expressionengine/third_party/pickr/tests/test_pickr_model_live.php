@@ -53,23 +53,26 @@ class Test_pickr_model_live extends Testee_unit_test_case {
 	public function test_get_member_flickr_buddy_icon()
 	{
 		// Shortcuts.
-		$db 	=& $this->_ee->db;
+		$db 	= $this->_ee->db;
 		$model	= $this->_model;
 		
 		$credentials	= $this->_model->get_api_credentials();
 		$connector		= new Pickr_flickr($credentials['api_key'], $credentials['secret_key']);
 		
 		// Dummy values.
-		$flickr_username 	= 'alphageek';
+		$flickr_username 	= 'brettwalker';		// Hard-coded, known ID.
 		$member_id 			= '2';
-		$member_field_id	= $model->get_flickr_username_member_field_id();
+		$member_field_id	= 'm_field_id_10';
+		
+		// Config.
+		$this->_ee->config->setReturnValue('item', $member_field_id, array('flickr_username_member_field'));
 		
 		// Query row.
 		$db_row = new StdClass();
 		$db_row->$member_field_id = $flickr_username;
 		
 		// Query result.
-		$db_result = $this->_get_mock('query');
+		$db_result = $this->_get_mock('db_query');
 		$db_result->setReturnValue('num_rows', 1);
 		$db_result->setReturnReference('row', $db_row);
 		
