@@ -108,9 +108,6 @@ class Pickr_model extends CI_Model {
 		
 		$this->_ee =& get_instance();
 		
-		$this->_flickr_username_member_field_id 	= 'm_field_id_1';
-		$this->_flickr_buddy_icon_member_field_id	= 'm_field_id_2';
-		
 		$this->_package_name	= 'Pickr';
 		$this->_package_version	= '0.1.0';
 		$this->_site_id 		= $this->_ee->config->item('site_id');
@@ -191,6 +188,11 @@ class Pickr_model extends CI_Model {
 	 */
 	public function get_flickr_buddy_icon_member_field_id()
 	{
+		if ( ! $this->_flickr_buddy_icon_member_field_id)
+		{
+			$this->_flickr_buddy_icon_member_field_id = $this->_ee->config->item('flickr_buddy_icon_member_field');
+		}
+		
 		return $this->_flickr_buddy_icon_member_field_id;
 	}
 	
@@ -240,6 +242,11 @@ class Pickr_model extends CI_Model {
 	 */
 	public function get_flickr_username_member_field_id()
 	{
+		if ( ! $this->_flickr_username_member_field_id)
+		{
+			$this->_flickr_username_member_field_id = $this->_ee->config->item('flickr_username_member_field');
+		}
+		
 		return $this->_flickr_username_member_field_id;
 	}
 	

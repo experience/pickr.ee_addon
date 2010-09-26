@@ -41,6 +41,13 @@ class Test_pickr_model extends Testee_unit_test_case {
 	{
 		parent::setUp();
 		
+		/**
+		 * Called from the model constructor, so needs
+		 * to be defined here.
+		 */
+		
+		$this->_ee->config->setReturnValue('item', 1, array('site_id'));
+		
 		// Doing this ensures a fresh model for each test.
 		$this->_model = new Pickr_model();
 		
@@ -53,6 +60,38 @@ class Test_pickr_model extends Testee_unit_test_case {
 	 * TEST METHODS
 	 * ------------------------------------------------------------ */
 	
+	public function test_get_flickr_username_member_field_id__pass()
+	{
+		$config 	= $this->_ee->config;
+		$field_id 	= 'm_field_id_10';
+		
+		/**
+		 * TRICKY:
+		 * Ideally, we want to use expectOnce here. However, because the model
+		 * calls $this->_ee->config->item in the constructor, and expectOnce does
+		 * not take into account the arguments passed, doing so will result in a
+		 * failed test.
+		 */
+		
+		$config->expect('item', array('flickr_username_member_field'));
+		$config->setReturnValue('item', $field_id, array('flickr_username_member_field'));
+		
+		$this->assertIdentical($this->_model->get_flickr_username_member_field_id(), $field_id);
+	}
+	
+	
+	public function test_get_flickr_buddy_icon_member_field_id__pass()
+	{
+		$config 	= $this->_ee->config;
+		$field_id	= 'm_field_id_10';
+		
+		$config->expect('item', array('flickr_buddy_icon_member_field'));
+		$config->setReturnValue('item', $field_id, array('flickr_buddy_icon_member_field'));
+		
+		$this->assertIdentical($this->_model->get_flickr_buddy_icon_member_field_id(), $field_id);
+	}
+	
+	
 	public function test_get_member_flickr_username__pass()
 	{
 		// Shortcuts.
@@ -62,7 +101,10 @@ class Test_pickr_model extends Testee_unit_test_case {
 		// Dummy values.
 		$flickr_username 	= 'wibble';
 		$member_id 			= '5';
-		$member_field_id	= $model->get_flickr_username_member_field_id();
+		$member_field_id	= 'm_field_id_10';
+		
+		// Configuration items.
+		$this->_ee->config->setReturnValue('item', $member_field_id, array('flickr_username_member_field'));
 		
 		// Query row.
 		$db_row = new StdClass();
