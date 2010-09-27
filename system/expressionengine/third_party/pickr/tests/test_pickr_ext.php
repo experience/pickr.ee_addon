@@ -8,7 +8,6 @@
  * @copyright 	Experience Internet
  */
 
-require_once PATH_THIRD .'pickr/ext.pickr' .EXT;
 require_once PATH_THIRD .'pickr/tests/mocks/mock_pickr_flickr' .EXT;
 require_once PATH_THIRD .'pickr/tests/mocks/mock_pickr_model' .EXT;
 
@@ -50,12 +49,31 @@ class Test_pickr_ext extends Testee_unit_test_case {
 	{
 		parent::setUp();
 		
-		// Mocks.
-		Mock::generate('Mock_pickr_model', 'Pickr_model');
-		Mock::generate('Mock_pickr_flickr', 'Pickr_flickr');
+		// Mock model.
+		Mock::generate('Mock_pickr_model', get_class($this) .'_mock_pickr_model');
+		$this->_model = $this->_get_mock('pickr_model');
 		
-		$this->_model	= new Pickr_model();
-		$this->_ext 	= new Pickr_ext(array(), $this->_model);
+		// EE->load->model does nothing (it's mocked), so we just set the model here.
+		$this->_ee->pickr_model = $this->_model;
+		
+		// Mock language.
+		$this->_ee->lang->setReturnValue('line', 'Extension description', array('extension_description'));
+		$this->_ee->lang->setReturnValue('line', 'Extension name', array('extension_name'));
+		
+		/**
+		 * VERY TRICKY:
+		 * Not at all happy with this workaround, but for now it must suffice.
+		 *
+		 * The extension checks if the Pickr_flickr class exists, before requiring the class file. This
+		 * allows us to mock the class here, BUT only if we create the mock prior to requiring the
+		 * extension class file.
+		 *
+		 * Ugly.
+		 */
+		
+		Mock::generate('Mock_pickr_flickr', 'Pickr_flickr');
+		require_once PATH_THIRD .'pickr/ext.pickr' .EXT;
+		$this->_ext = new Pickr_ext(array());
 	}
 	
 	

@@ -88,25 +88,16 @@ class Pickr_ext {
 	 *
 	 * @access	public
 	 * @param	array 			$settings		Previously-saved extension settings.
-	 * @param 	Pickr_model		$model			Model. Passed directly to constructor during testing.
 	 * @return	void
 	 */
-	public function __construct($settings = array(), Pickr_model $model = NULL)
+	public function __construct($settings = array())
 	{
 		$this->_ee =& get_instance();
 		
-		// Load the model, if required.
-		if ($model)
-		{
-			$this->_model = $model;
-		}
-		else
-		{
-			$this->_ee->load->add_package_path(PATH_THIRD .'pickr/');
-			$this->_ee->load->model('pickr_model');
-			
-			$this->_model = $this->_ee->pickr_model;
-		}
+		// Load the model.
+		$this->_ee->load->add_package_path(PATH_THIRD .'pickr/');
+		$this->_ee->load->model('pickr_model');
+		$this->_model = $this->_ee->pickr_model;
 		
 		// Load the language file.
 		$this->_ee->lang->loadfile('pickr');
