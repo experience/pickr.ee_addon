@@ -6,7 +6,7 @@
  * @package			Pickr
  * @author 			Stephen Lewis <stephen@experienceinternet.co.uk>
  * @copyright 		Experience Internet
- * @version 		0.1.0
+ * @version 		0.1.1
  */
 
 require_once PATH_THIRD .'pickr/classes/pickr_exceptions' .EXT;
@@ -109,7 +109,7 @@ class Pickr_model extends CI_Model {
 		$this->_ee =& get_instance();
 		
 		$this->_package_name	= 'Pickr';
-		$this->_package_version	= '0.1.0';
+		$this->_package_version	= '0.1.1';
 		$this->_site_id 		= $this->_ee->config->item('site_id');
 		$this->_extension_class = ucfirst($this->get_package_name() .'_ext');
 		
